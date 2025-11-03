@@ -1,10 +1,9 @@
 import { useState, useEffect, useReducer } from 'react';
 import SearchBar from './components/SearchBar';
 import WeatherDisplay from './components/WeatherDisplay';
-import ForecastCard from './components/ForecastCard';
 import ErrorMessage from './components/ErrorMessage';
 import LoadingSpinner from './components/LoadingSpinner';
-import { fetchWeatherByCity, fetchForecastByCity } from './utils/weatherAPI';
+import { fetchWeatherByCity, fetchForecastByCity, fetchWeatherByCoordinates, fetchForecastByCoordinates } from './utils/weatherAPI';
 import { weatherReducer, initialWeatherState, WEATHER_ACTIONS } from './utils/weatherReducer';
 import './App.css';
 
@@ -22,12 +21,33 @@ function App() {
       setUnit(savedUnit);
     }
 
-    // Try to get user's location on mount
+    // Try to get user's location on mount and fetch weather automatically
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          // Could implement auto-fetch based on location here
-          console.log('Location available:', position.coords);
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log('Location available:', latitude, longitude);
+
+          // Fetch weather for user's location
+          dispatch({ type: WEATHER_ACTIONS.FETCH_START, payload: 'your location' });
+          dispatch({ type: WEATHER_ACTIONS.FORECAST_START });
+
+          try {
+            const weatherData = await fetchWeatherByCoordinates(latitude, longitude);
+            dispatch({ type: WEATHER_ACTIONS.FETCH_SUCCESS, payload: weatherData });
+
+            // Fetch forecast
+            try {
+              const forecastData = await fetchForecastByCoordinates(latitude, longitude);
+              dispatch({ type: WEATHER_ACTIONS.FORECAST_SUCCESS, payload: forecastData });
+            } catch (forecastError) {
+              console.error('Forecast fetch failed:', forecastError);
+              dispatch({ type: WEATHER_ACTIONS.FORECAST_ERROR });
+            }
+          } catch (error) {
+            console.error('Weather fetch failed:', error);
+            // Don't show error for automatic location fetch, just log it
+          }
         },
         (error) => {
           console.log('Location access denied:', error);
@@ -102,28 +122,9 @@ function App() {
                 weather={weatherState.currentWeather}
                 unit={unit}
                 onToggleUnit={handleToggleUnit}
+                forecast={weatherState.forecast}
+                isForecastLoading={weatherState.isForecastLoading}
               />
-
-              {weatherState.forecast.length > 0 && (
-                <div className="forecast-section">
-                  <h2 className="forecast-title">5-Day Forecast</h2>
-                  <div className="forecast-container">
-                    {weatherState.forecast.map((forecast) => (
-                      <ForecastCard
-                        key={forecast.dt}
-                        forecast={forecast}
-                        unit={unit}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {weatherState.isForecastLoading && (
-                <div className="forecast-loading">
-                  <LoadingSpinner message="Loading forecast..." />
-                </div>
-              )}
             </div>
           )}
 

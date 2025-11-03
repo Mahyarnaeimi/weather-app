@@ -1,6 +1,7 @@
 import './WeatherDisplay.css';
+import ForecastCard from './ForecastCard';
 
-const WeatherDisplay = ({ weather, unit, onToggleUnit }) => {
+const WeatherDisplay = ({ weather, unit, onToggleUnit, forecast, isForecastLoading }) => {
   if (!weather) return null;
 
   const { name, main, weather: weatherInfo, wind, sys } = weather;
@@ -107,6 +108,29 @@ const WeatherDisplay = ({ weather, unit, onToggleUnit }) => {
           </div>
         </div>
       </div>
+
+      {/* 5-Day Forecast Section */}
+      {forecast && forecast.length > 0 && (
+        <div className="forecast-section-inside">
+          <h3 className="forecast-title-inside">5-Day Forecast</h3>
+          <div className="forecast-container-inside">
+            {forecast.map((forecastItem) => (
+              <ForecastCard
+                key={forecastItem.dt}
+                forecast={forecastItem}
+                unit={unit}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {isForecastLoading && (
+        <div className="forecast-loading-inside">
+          <div className="loading-spinner-small"></div>
+          <p>Loading forecast...</p>
+        </div>
+      )}
     </div>
   );
 };

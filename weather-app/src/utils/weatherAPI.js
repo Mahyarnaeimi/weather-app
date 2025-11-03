@@ -136,3 +136,39 @@ export const fetchWeatherByCoordinates = async (lat, lon) => {
     throw new Error(ERROR_MESSAGES.NETWORK_ERROR);
   }
 };
+
+// Fetch forecast by coordinates
+export const fetchForecastByCoordinates = async (lat, lon) => {
+  try {
+    validateAPIKey();
+
+    const response = await fetch(
+      `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+    );
+
+    if (!response.ok) {
+      const error = new Error('API request failed');
+      error.response = { status: response.status };
+      handleAPIError(error);
+    }
+
+    const data = await response.json();
+
+    // Filter to get one forecast per day at 12:00 PM
+    const dailyForecasts = data.list.filter(item => {
+      const date = new Date(item.dt * 1000);
+      return date.getHours() === 12;
+    }).slice(0, 5);
+
+    return dailyForecasts;
+  } catch (error) {
+    if (error.message.includes('API key') ||
+        error.message.includes('City not found') ||
+        error.message.includes('Network error') ||
+        error.message.includes('Too many requests') ||
+        error.message.includes('Server error')) {
+      throw error;
+    }
+    throw new Error(ERROR_MESSAGES.NETWORK_ERROR);
+  }
+};
