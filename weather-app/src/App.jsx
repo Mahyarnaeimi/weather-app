@@ -39,6 +39,7 @@ function App() {
             // Fetch forecast
             try {
               const forecastData = await fetchForecastByCoordinates(latitude, longitude);
+              console.log('Fetched forecast data for coordinates:', forecastData);
               dispatch({ type: WEATHER_ACTIONS.FORECAST_SUCCESS, payload: forecastData });
             } catch (forecastError) {
               console.error('Forecast fetch failed:', forecastError);
@@ -74,6 +75,7 @@ function App() {
       // Fetch 5-day forecast
       try {
         const forecastData = await fetchForecastByCity(city);
+        console.log('Fetched forecast data for city:', forecastData);
         dispatch({ type: WEATHER_ACTIONS.FORECAST_SUCCESS, payload: forecastData });
       } catch (forecastError) {
         console.error('Forecast fetch failed:', forecastError);

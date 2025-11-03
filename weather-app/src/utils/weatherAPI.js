@@ -90,11 +90,43 @@ export const fetchForecastByCity = async (city) => {
 
     const data = await response.json();
 
-    // Filter to get one forecast per day at 12:00 PM
-    const dailyForecasts = data.list.filter(item => {
+    // Get one forecast per day (around midday when possible)
+    const dailyForecasts = [];
+    const seenDates = new Set();
+
+    // First pass: try to get midday forecasts (9 AM - 3 PM)
+    for (const item of data.list) {
       const date = new Date(item.dt * 1000);
-      return date.getHours() === 12;
-    }).slice(0, 5);
+      const dateKey = date.toDateString();
+
+      if (seenDates.has(dateKey)) continue;
+
+      const hour = date.getHours();
+      if (hour >= 9 && hour <= 15) {
+        seenDates.add(dateKey);
+        dailyForecasts.push(item);
+
+        if (dailyForecasts.length >= 5) break;
+      }
+    }
+
+    // If we don't have 5 forecasts, get first forecast of each day
+    if (dailyForecasts.length < 5) {
+      seenDates.clear();
+      dailyForecasts.length = 0;
+
+      for (const item of data.list) {
+        const date = new Date(item.dt * 1000);
+        const dateKey = date.toDateString();
+
+        if (!seenDates.has(dateKey)) {
+          seenDates.add(dateKey);
+          dailyForecasts.push(item);
+
+          if (dailyForecasts.length >= 5) break;
+        }
+      }
+    }
 
     return dailyForecasts;
   } catch (error) {
@@ -154,11 +186,43 @@ export const fetchForecastByCoordinates = async (lat, lon) => {
 
     const data = await response.json();
 
-    // Filter to get one forecast per day at 12:00 PM
-    const dailyForecasts = data.list.filter(item => {
+    // Get one forecast per day (around midday when possible)
+    const dailyForecasts = [];
+    const seenDates = new Set();
+
+    // First pass: try to get midday forecasts (9 AM - 3 PM)
+    for (const item of data.list) {
       const date = new Date(item.dt * 1000);
-      return date.getHours() === 12;
-    }).slice(0, 5);
+      const dateKey = date.toDateString();
+
+      if (seenDates.has(dateKey)) continue;
+
+      const hour = date.getHours();
+      if (hour >= 9 && hour <= 15) {
+        seenDates.add(dateKey);
+        dailyForecasts.push(item);
+
+        if (dailyForecasts.length >= 5) break;
+      }
+    }
+
+    // If we don't have 5 forecasts, get first forecast of each day
+    if (dailyForecasts.length < 5) {
+      seenDates.clear();
+      dailyForecasts.length = 0;
+
+      for (const item of data.list) {
+        const date = new Date(item.dt * 1000);
+        const dateKey = date.toDateString();
+
+        if (!seenDates.has(dateKey)) {
+          seenDates.add(dateKey);
+          dailyForecasts.push(item);
+
+          if (dailyForecasts.length >= 5) break;
+        }
+      }
+    }
 
     return dailyForecasts;
   } catch (error) {

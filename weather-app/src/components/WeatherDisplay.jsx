@@ -1,8 +1,12 @@
 import './WeatherDisplay.css';
 import ForecastCard from './ForecastCard';
 
-const WeatherDisplay = ({ weather, unit, onToggleUnit, forecast, isForecastLoading }) => {
+const WeatherDisplay = ({ weather, unit, onToggleUnit, forecast = [], isForecastLoading = false }) => {
   if (!weather) return null;
+
+  // Debug: Log forecast data
+  console.log('WeatherDisplay received forecast:', forecast);
+  console.log('Forecast array length:', forecast?.length);
 
   const { name, main, weather: weatherInfo, wind, sys } = weather;
   const weatherIcon = weatherInfo[0].icon;
