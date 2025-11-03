@@ -1,5 +1,5 @@
 .forecast-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
   border-radius: 15px;
   padding: 1.5rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
