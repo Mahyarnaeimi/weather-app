@@ -1,164 +1,131 @@
-# Weather Forecast App
+# Weather App Mobile (React Native)
 
-A modern, dynamic, and visually appealing weather forecasting application built with React and the OpenWeatherMap API. This app provides real-time weather data, 5-day forecasts, and a beautiful user interface with smooth animations and responsive design.
-
+A mobile weather application built with React Native, Expo, and TypeScript. This is the mobile version of the Weather Forecast web application.
 
 ## Features
 
-- **Real-time Weather Data**: Get current weather information for any city worldwide
-- **5-Day Forecast**: View detailed weather predictions for the next 5 days
-- **Temperature Unit Toggle**: Easily switch between Celsius and Fahrenheit
-- **Comprehensive Weather Details**:
-  - Temperature (current, feels like, min, max)
-  - Humidity
-  - Wind speed
-  - Atmospheric pressure
-  - Visibility
-  - Sunrise & sunset times
-- **Modern Design**:
-  - Smooth animations and transitions
-  - Responsive layout for all screen sizes
-- **Error Handling**: User-friendly error messages for various scenarios
-- **Loading States**: Visual feedback during API requests
-- **Local Storage**: Remembers your temperature unit preference
+- Real-time weather data for any city
+- 5-day weather forecast
+- Automatic location detection
+- Temperature unit toggle (Celsius/Fahrenheit)
+- Clean and modern UI design
+- Persistent user preferences
 
+## Tech Stack
 
+- **React Native** - Mobile app framework
+- **Expo** - Development platform
+- **TypeScript** - Type safety
+- **OpenWeatherMap API** - Weather data
 
+## Project Structure
 
-## Installation & Setup
-
-### 1. Clone the Repository
-
-```bash
-git clone <your-repository-url>
-cd weather-app
+```
+weather-app/
+├── App.tsx                 # Main application component
+├── src/
+│   ├── components/
+│   │   ├── SearchBar.tsx      # City search input
+│   │   ├── WeatherDisplay.tsx # Main weather display
+│   │   ├── ForecastCard.tsx   # Forecast item card
+│   │   ├── LoadingSpinner.tsx # Loading indicator
+│   │   └── ErrorMessage.tsx   # Error display
+│   ├── types/
+│   │   └── weather.ts         # TypeScript interfaces
+│   └── utils/
+│       ├── weatherAPI.ts      # API functions
+│       └── weatherReducer.ts  # State management
+├── assets/                 # App icons and images
+├── app.json               # Expo configuration
+├── package.json           # Dependencies
+└── tsconfig.json          # TypeScript config
 ```
 
-### 2. Install Dependencies
+## Installation
 
+1. Make sure you have Node.js and npm installed
+
+2. Install Expo CLI globally:
+   ```bash
+   npm install -g expo-cli
+   ```
+
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+4. Start the development server:
+   ```bash
+   npm start
+   ```
+
+5. Run on your device:
+   - Scan the QR code with Expo Go app (iOS/Android)
+   - Press `a` for Android emulator
+   - Press `i` for iOS simulator
+
+## API Key
+
+The app uses OpenWeatherMap API. The API key is included in the code for demo purposes. For production, you should:
+
+1. Get your own API key from [OpenWeatherMap](https://openweathermap.org/api)
+2. Replace the API key in `src/utils/weatherAPI.ts`
+
+## Building for Production
+
+### Android (APK/AAB)
 ```bash
-npm install
+eas build --platform android
 ```
 
-### 3. Configure Environment Variables
-
-1. Copy the `.env` file.
-
-2. Open the `.env` file and make sure about the API key presence.(should be shared in advance)
-
-### 4. Run the Development Server
-
+### iOS (IPA)
 ```bash
-npm run dev
+eas build --platform ios
 ```
 
-The application will start at `http://localhost:5173`.
-
-
-
-
-
-## Usage Guide:
-
-### Searching for Weather
-
-1. Enter a city name in the search bar (e.g., "London", "New York", "Tokyo")
-2. Click the "Search" button or press Enter
-3. Wait for the app to fetch and display the weather data
-
-### Toggle Temperature Units
-
-- Click the temperature unit button (°C or °F) in the weather display header
-- Your preference will be saved automatically
-
-### Understanding the Weather Display
-
-- **Main Section**: Shows current temperature, weather icon, and description
-- **Details Cards**: Display humidity, wind speed, pressure, visibility, sunrise, and sunset
-- **Forecast Section**: Shows 5-day weather forecast with temperatures and conditions
-
-
-
-
-## React Hooks Used:
+## React Hooks Used
 
 This project demonstrates proficiency with essential React hooks:
 
 ### useState
 - Managing temperature unit preference
 - Handling search input state
-- Component-level state management
 
 ### useEffect
-- Loading saved preferences from localStorage
+- Loading saved preferences from AsyncStorage
 - Persisting user preferences
-- Requesting geolocation on app mount
-- Side effects management
+- Requesting location permission on app mount
 
 ### useReducer
 - Complex weather state management
-- Handling multiple related state values
-- Managing loading, error, and success states
-- Action-based state updates
+- Handling loading, error, and success states
 
-## API Integration
+## Branches
 
-The app uses the OpenWeatherMap API with two main endpoints:
+- `main` - Web version (React + Vite + JavaScript)
+- `react-native-mobile` - Mobile version (React Native + Expo + TypeScript)
 
-1. **Current Weather API**: `/weather`
-   - Fetches current weather data for a specified city
-   - Returns temperature, humidity, wind, pressure, etc.
+### Switching Between Branches
 
-2. **5-Day Forecast API**: `/forecast`
-   - Retrieves weather predictions
-   - Filtered to show one forecast per day at noon
+To switch to the web version:
+```bash
+git checkout main
+```
 
+To switch to the mobile version:
+```bash
+git checkout react-native-mobile
+```
 
-
-### Error Handling
-
-The app handles various API errors:
-- Invalid API key (401)
-- City not found (404)
-- Too many requests (429)
-- Server errors (500, 502, 503)
-- Network errors
-- Missing API key
-
-
-
-
-
-## Troubleshooting
-
-### API Key Issues
-
-**Problem**: "API key is missing" error
-**Solution**: Ensure your `.env` file exists and contains `VITE_OPENWEATHER_API_KEY=your_key`
-
-**Problem**: "Invalid API key" error
-**Solution**: Verify your API key is correct and ask the author: Mahyar Naeimi if its active on OpenWeatherMap
-
-### City Not Found
-
-**Problem**: "City not found" error
-**Solution**:
-- Check the spelling of the city name
-- Try adding the country code (e.g., "London,UK")
-- Use larger cities that are more likely to be in the database
-
-### Development Server Issues
-
-**Problem**: Port already in use
-**Solution**: Vite will automatically try the next available port, or you can specify a port in `vite.config.js`
-
+**Note:** Each branch has completely different files. The web version files are preserved in `main` branch and mobile version files are in `react-native-mobile` branch.
 
 ## Contact & Support
 
 For questions, issues, or suggestions:
 - Open an issue in the GitHub repository
-- Contact the developmer: Mahyar Naeimi
+- Contact the developer: Mahyar Naeimi
 
 ---
 
-**Built with React and OpenWeatherMap API**
+**Built with React Native, Expo, and OpenWeatherMap API**

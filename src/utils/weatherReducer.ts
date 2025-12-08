@@ -1,3 +1,5 @@
+import { WeatherState, WeatherAction } from '../types/weather';
+
 // Action types
 export const WEATHER_ACTIONS = {
   FETCH_START: 'FETCH_START',
@@ -7,73 +9,73 @@ export const WEATHER_ACTIONS = {
   FORECAST_SUCCESS: 'FORECAST_SUCCESS',
   FORECAST_ERROR: 'FORECAST_ERROR',
   CLEAR_ERROR: 'CLEAR_ERROR',
-  RESET: 'RESET'
-};
+  RESET: 'RESET',
+} as const;
 
 // Initial state
-export const initialWeatherState = {
+export const initialWeatherState: WeatherState = {
   currentWeather: null,
   forecast: [],
   isLoading: false,
   isForecastLoading: false,
   error: null,
-  lastSearchedCity: ''
+  lastSearchedCity: '',
 };
 
 // Reducer function
-export const weatherReducer = (state, action) => {
+export const weatherReducer = (state: WeatherState, action: WeatherAction): WeatherState => {
   switch (action.type) {
-    case WEATHER_ACTIONS.FETCH_START:
+    case 'FETCH_START':
       return {
         ...state,
         isLoading: true,
         error: null,
-        lastSearchedCity: action.payload
+        lastSearchedCity: action.payload,
       };
 
-    case WEATHER_ACTIONS.FETCH_SUCCESS:
+    case 'FETCH_SUCCESS':
       return {
         ...state,
         isLoading: false,
         currentWeather: action.payload,
-        error: null
+        error: null,
       };
 
-    case WEATHER_ACTIONS.FETCH_ERROR:
+    case 'FETCH_ERROR':
       return {
         ...state,
         isLoading: false,
         currentWeather: null,
-        error: action.payload
+        error: action.payload,
       };
 
-    case WEATHER_ACTIONS.FORECAST_START:
+    case 'FORECAST_START':
       return {
         ...state,
-        isForecastLoading: true
+        isForecastLoading: true,
       };
 
-    case WEATHER_ACTIONS.FORECAST_SUCCESS:
-      return {
-        ...state,
-        isForecastLoading: false,
-        forecast: action.payload
-      };
-
-    case WEATHER_ACTIONS.FORECAST_ERROR:
+    case 'FORECAST_SUCCESS':
       return {
         ...state,
         isForecastLoading: false,
-        forecast: []
+        forecast: action.payload,
       };
 
-    case WEATHER_ACTIONS.CLEAR_ERROR:
+    case 'FORECAST_ERROR':
       return {
         ...state,
-        error: null
+        isForecastLoading: false,
+        forecast: [],
       };
 
-    case WEATHER_ACTIONS.RESET:
+    case 'CLEAR_ERROR':
+      return {
+        ...state,
+        error: null,
+      };
+
+    case 'RESET':
       return initialWeatherState;
 
     default:
