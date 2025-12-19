@@ -1,24 +1,10 @@
 import { CurrentWeatherResponse, ForecastItem, ForecastResponse } from '../types/weather';
-
-// API Key - In production, use environment variables
-const API_KEY = 'e8169801b0b28dde9166d4116bc1914a';
-const BASE_URL = 'https://api.openweathermap.org/data/2.5';
-
-// Error messages
-const ERROR_MESSAGES = {
-  NO_API_KEY: 'API key is missing. Please configure your API key.',
-  CITY_NOT_FOUND: 'City not found. Please check the spelling and try again.',
-  NETWORK_ERROR: 'Network error. Please check your internet connection and try again.',
-  UNAUTHORIZED: 'Invalid API key. Please check your OpenWeatherMap API key.',
-  TOO_MANY_REQUESTS: 'Too many requests. Please wait a moment and try again.',
-  SERVER_ERROR: 'Server error. Please try again later.',
-  UNKNOWN_ERROR: 'An unexpected error occurred. Please try again.',
-};
+import { API_CONFIG, API_ERRORS } from '../constants';
 
 // Check if API key exists
 export const validateAPIKey = (): boolean => {
-  if (!API_KEY) {
-    throw new Error(ERROR_MESSAGES.NO_API_KEY);
+  if (!API_CONFIG.API_KEY) {
+    throw new Error(API_ERRORS.NO_API_KEY);
   }
   return true;
 };
@@ -27,17 +13,17 @@ export const validateAPIKey = (): boolean => {
 const handleAPIError = (status: number): never => {
   switch (status) {
     case 401:
-      throw new Error(ERROR_MESSAGES.UNAUTHORIZED);
+      throw new Error(API_ERRORS.UNAUTHORIZED);
     case 404:
-      throw new Error(ERROR_MESSAGES.CITY_NOT_FOUND);
+      throw new Error(API_ERRORS.CITY_NOT_FOUND);
     case 429:
-      throw new Error(ERROR_MESSAGES.TOO_MANY_REQUESTS);
+      throw new Error(API_ERRORS.TOO_MANY_REQUESTS);
     case 500:
     case 502:
     case 503:
-      throw new Error(ERROR_MESSAGES.SERVER_ERROR);
+      throw new Error(API_ERRORS.SERVER_ERROR);
     default:
-      throw new Error(ERROR_MESSAGES.UNKNOWN_ERROR);
+      throw new Error(API_ERRORS.UNKNOWN_ERROR);
   }
 };
 
@@ -52,14 +38,23 @@ const isKnownError = (message: string): boolean => {
   );
 };
 
+// Build API URL
+const buildUrl = (endpoint: string, params: Record<string, string | number>): string => {
+  const searchParams = new URLSearchParams({
+    ...Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)])),
+    appid: API_CONFIG.API_KEY,
+    units: API_CONFIG.UNITS,
+  });
+  return `${API_CONFIG.BASE_URL}${endpoint}?${searchParams.toString()}`;
+};
+
 // Fetch current weather by city name
 export const fetchWeatherByCity = async (city: string): Promise<CurrentWeatherResponse> => {
   try {
     validateAPIKey();
 
-    const response = await fetch(
-      `${BASE_URL}/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`
-    );
+    const url = buildUrl('/weather', { q: city });
+    const response = await fetch(url);
 
     if (!response.ok) {
       handleAPIError(response.status);
@@ -71,7 +66,7 @@ export const fetchWeatherByCity = async (city: string): Promise<CurrentWeatherRe
     if (error instanceof Error && isKnownError(error.message)) {
       throw error;
     }
-    throw new Error(ERROR_MESSAGES.NETWORK_ERROR);
+    throw new Error(API_ERRORS.NETWORK_ERROR);
   }
 };
 
@@ -122,9 +117,8 @@ export const fetchForecastByCity = async (city: string): Promise<ForecastItem[]>
   try {
     validateAPIKey();
 
-    const response = await fetch(
-      `${BASE_URL}/forecast?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`
-    );
+    const url = buildUrl('/forecast', { q: city });
+    const response = await fetch(url);
 
     if (!response.ok) {
       handleAPIError(response.status);
@@ -136,7 +130,7 @@ export const fetchForecastByCity = async (city: string): Promise<ForecastItem[]>
     if (error instanceof Error && isKnownError(error.message)) {
       throw error;
     }
-    throw new Error(ERROR_MESSAGES.NETWORK_ERROR);
+    throw new Error(API_ERRORS.NETWORK_ERROR);
   }
 };
 
@@ -148,9 +142,8 @@ export const fetchWeatherByCoordinates = async (
   try {
     validateAPIKey();
 
-    const response = await fetch(
-      `${BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
-    );
+    const url = buildUrl('/weather', { lat, lon });
+    const response = await fetch(url);
 
     if (!response.ok) {
       handleAPIError(response.status);
@@ -162,7 +155,7 @@ export const fetchWeatherByCoordinates = async (
     if (error instanceof Error && isKnownError(error.message)) {
       throw error;
     }
-    throw new Error(ERROR_MESSAGES.NETWORK_ERROR);
+    throw new Error(API_ERRORS.NETWORK_ERROR);
   }
 };
 
@@ -174,9 +167,8 @@ export const fetchForecastByCoordinates = async (
   try {
     validateAPIKey();
 
-    const response = await fetch(
-      `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
-    );
+    const url = buildUrl('/forecast', { lat, lon });
+    const response = await fetch(url);
 
     if (!response.ok) {
       handleAPIError(response.status);
@@ -188,6 +180,6 @@ export const fetchForecastByCoordinates = async (
     if (error instanceof Error && isKnownError(error.message)) {
       throw error;
     }
-    throw new Error(ERROR_MESSAGES.NETWORK_ERROR);
+    throw new Error(API_ERRORS.NETWORK_ERROR);
   }
 };

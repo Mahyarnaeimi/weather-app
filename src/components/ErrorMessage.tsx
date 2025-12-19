@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { ErrorMessageProps } from '../types/weather';
+import { colors, typography, spacing } from '../styles';
 
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ message, onRetry }) => {
   return (
@@ -20,41 +21,41 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ message, onRetry }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fef2f2',
-    borderRadius: 16,
-    padding: 24,
-    marginHorizontal: 20,
+    borderRadius: spacing.borderRadius.lg,
+    padding: spacing['2xl'],
+    marginHorizontal: spacing.xl,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#fecaca',
   },
   icon: {
     fontSize: 48,
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: typography.fontSize.lg,
+    fontWeight: typography.fontWeight.semibold,
     color: '#991b1b',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
     textAlign: 'center',
   },
   message: {
-    fontSize: 14,
-    color: '#dc2626',
+    fontSize: typography.fontSize.sm,
+    color: colors.error,
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: spacing.xl,
     lineHeight: 20,
   },
   retryButton: {
-    backgroundColor: '#ef4444',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 10,
+    backgroundColor: colors.error,
+    paddingHorizontal: spacing['2xl'],
+    paddingVertical: spacing.md,
+    borderRadius: spacing.borderRadius.sm + 2,
   },
   retryButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.white,
+    fontSize: typography.fontSize.md,
+    fontWeight: typography.fontWeight.semibold,
   },
 });
 

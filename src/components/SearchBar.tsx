@@ -9,6 +9,7 @@ import {
   Keyboard,
 } from 'react-native';
 import { SearchBarProps } from '../types/weather';
+import { colors, typography, spacing, shadows } from '../styles';
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading }) => {
   const [city, setCity] = useState<string>('');
@@ -39,7 +40,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading }) => {
           value={city}
           onChangeText={handleChange}
           placeholder="Enter city name (e.g., London)"
-          placeholderTextColor="#9ca3af"
+          placeholderTextColor={colors.textLight}
           editable={!isLoading}
           returnKeyType="search"
           onSubmitEditing={handleSubmit}
@@ -53,7 +54,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading }) => {
           activeOpacity={0.7}
         >
           {isLoading ? (
-            <ActivityIndicator color="#ffffff" size="small" />
+            <ActivityIndicator color={colors.white} size="small" />
           ) : (
             <Text style={styles.buttonText}>Search</Text>
           )}
@@ -66,56 +67,52 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, isLoading }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    marginBottom: 20,
+    paddingHorizontal: spacing.xl,
+    marginBottom: spacing.xl,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: spacing.sm,
   },
   input: {
     flex: 1,
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 16,
-    color: '#1f2937',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    backgroundColor: colors.white,
+    borderRadius: spacing.borderRadius.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm + 6,
+    fontSize: typography.fontSize.md,
+    color: colors.textPrimary,
+    ...shadows.card,
   },
   inputError: {
     borderWidth: 1,
-    borderColor: '#ef4444',
+    borderColor: colors.error,
   },
   button: {
-    backgroundColor: '#667eea',
-    borderRadius: 12,
-    paddingHorizontal: 24,
-    paddingVertical: 14,
-    shadowColor: '#667eea',
+    backgroundColor: colors.buttonPrimary,
+    borderRadius: spacing.borderRadius.md,
+    paddingHorizontal: spacing['2xl'],
+    paddingVertical: spacing.sm + 6,
+    shadowColor: colors.buttonPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
   },
   buttonDisabled: {
-    backgroundColor: '#9ca3af',
+    backgroundColor: colors.textLight,
   },
   buttonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.buttonText,
+    fontSize: typography.fontSize.md,
+    fontWeight: typography.fontWeight.semibold,
   },
   errorText: {
-    color: '#ef4444',
-    fontSize: 14,
-    marginTop: 8,
-    marginLeft: 4,
+    color: colors.error,
+    fontSize: typography.fontSize.sm,
+    marginTop: spacing.sm,
+    marginLeft: spacing.xs,
   },
 });
 

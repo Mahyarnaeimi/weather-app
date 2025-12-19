@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { ForecastCardProps } from '../types/weather';
+import { colors, typography, spacing, shadows } from '../styles';
+import { getWeatherIconUrl } from '../constants';
 
 const ForecastCard: React.FC<ForecastCardProps> = ({ forecast, unit }) => {
   const { dt, main, weather, wind } = forecast;
@@ -32,10 +34,7 @@ const ForecastCard: React.FC<ForecastCardProps> = ({ forecast, unit }) => {
         <Text style={styles.dateStr}>{dateStr}</Text>
       </View>
 
-      <Image
-        source={{ uri: `https://openweathermap.org/img/wn/${weatherIcon}@2x.png` }}
-        style={styles.icon}
-      />
+      <Image source={{ uri: getWeatherIconUrl(weatherIcon, '2x') }} style={styles.icon} />
 
       <View style={styles.tempContainer}>
         <Text style={styles.tempMain}>
@@ -68,88 +67,84 @@ const ForecastCard: React.FC<ForecastCardProps> = ({ forecast, unit }) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 16,
-    padding: 16,
-    marginRight: 12,
+    backgroundColor: colors.cardBackground,
+    borderRadius: spacing.borderRadius.lg,
+    padding: spacing.lg,
+    marginRight: spacing.md,
     width: 140,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...shadows.card,
   },
   dateContainer: {
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   dayName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1f2937',
+    fontSize: typography.fontSize.md,
+    fontWeight: typography.fontWeight.semibold,
+    color: colors.textPrimary,
   },
   dateStr: {
-    fontSize: 12,
-    color: '#6b7280',
+    fontSize: typography.fontSize.xs,
+    color: colors.textMuted,
     marginTop: 2,
   },
   icon: {
-    width: 60,
-    height: 60,
+    width: spacing.imageSize.forecastIcon,
+    height: spacing.imageSize.forecastIcon,
   },
   tempContainer: {
     alignItems: 'center',
-    marginVertical: 8,
+    marginVertical: spacing.sm,
   },
   tempMain: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#1f2937',
+    fontSize: typography.fontSize['2xl'],
+    fontWeight: typography.fontWeight.bold,
+    color: colors.textPrimary,
   },
   tempRange: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
   tempMin: {
-    fontSize: 12,
-    color: '#3b82f6',
+    fontSize: typography.fontSize.xs,
+    color: colors.tempCold,
   },
   tempSeparator: {
-    fontSize: 12,
-    color: '#9ca3af',
-    marginHorizontal: 4,
+    fontSize: typography.fontSize.xs,
+    color: colors.textLight,
+    marginHorizontal: spacing.xs,
   },
   tempMax: {
-    fontSize: 12,
-    color: '#ef4444',
+    fontSize: typography.fontSize.xs,
+    color: colors.tempHot,
   },
   description: {
-    fontSize: 12,
-    color: '#6b7280',
+    fontSize: typography.fontSize.xs,
+    color: colors.textMuted,
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   details: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    paddingTop: 8,
+    paddingTop: spacing.sm,
     borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
+    borderTopColor: colors.border,
   },
   detailItem: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   detailIcon: {
-    fontSize: 12,
-    marginRight: 4,
+    fontSize: typography.fontSize.xs,
+    marginRight: spacing.xs,
   },
   detailValue: {
-    fontSize: 12,
-    color: '#6b7280',
+    fontSize: typography.fontSize.xs,
+    color: colors.textMuted,
   },
 });
 

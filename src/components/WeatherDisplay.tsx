@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import { WeatherDisplayProps } from '../types/weather';
 import ForecastCard from './ForecastCard';
+import { colors, typography, spacing, shadows } from '../styles';
+import { getWeatherIconUrl } from '../constants';
 
 const WeatherDisplay: React.FC<WeatherDisplayProps> = ({
   weather,
@@ -40,7 +42,11 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={styles.container}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.scrollContent}
+    >
       {/* Header with city name and unit toggle */}
       <View style={styles.header}>
         <View>
@@ -55,10 +61,7 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({
 
       {/* Main weather display */}
       <View style={styles.mainWeather}>
-        <Image
-          source={{ uri: `https://openweathermap.org/img/wn/${weatherIcon}@4x.png` }}
-          style={styles.weatherIcon}
-        />
+        <Image source={{ uri: getWeatherIconUrl(weatherIcon, '4x') }} style={styles.weatherIcon} />
         <View style={styles.temperatureContainer}>
           <Text style={styles.temperature}>
             {temperature}°{unit === 'celsius' ? 'C' : 'F'}
@@ -118,6 +121,7 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
+            nestedScrollEnabled={true}
             contentContainerStyle={styles.forecastContainer}
           >
             {forecast.map((forecastItem) => (
@@ -129,7 +133,7 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({
 
       {isForecastLoading && (
         <View style={styles.forecastLoading}>
-          <ActivityIndicator size="small" color="#667eea" />
+          <ActivityIndicator size="small" color={colors.primary} />
           <Text style={styles.forecastLoadingText}>Loading forecast...</Text>
         </View>
       )}
@@ -141,116 +145,115 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollContent: {
+    paddingBottom: spacing['3xl'],
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 20,
+    paddingHorizontal: spacing.xl,
+    marginBottom: spacing.xl,
   },
   cityName: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#1f2937',
+    fontSize: typography.fontSize['3xl'],
+    fontWeight: typography.fontWeight.bold,
+    color: colors.textPrimary,
   },
   unitToggle: {
-    backgroundColor: '#667eea',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    backgroundColor: colors.primary,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
+    borderRadius: spacing.borderRadius.xl,
   },
   unitToggleText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.white,
+    fontSize: typography.fontSize.md,
+    fontWeight: typography.fontWeight.semibold,
   },
   mainWeather: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 30,
+    paddingHorizontal: spacing.xl,
+    marginBottom: spacing['3xl'],
   },
   weatherIcon: {
-    width: 150,
-    height: 150,
+    width: spacing.imageSize.weatherIcon,
+    height: spacing.imageSize.weatherIcon,
   },
   temperatureContainer: {
     alignItems: 'flex-start',
   },
   temperature: {
-    fontSize: 64,
-    fontWeight: '700',
-    color: '#1f2937',
+    fontSize: typography.fontSize['4xl'],
+    fontWeight: typography.fontWeight.bold,
+    color: colors.textPrimary,
   },
   description: {
-    fontSize: 20,
-    color: '#4b5563',
+    fontSize: typography.fontSize.xl,
+    color: colors.textSecondary,
     textTransform: 'capitalize',
     marginTop: -5,
   },
   feelsLike: {
-    fontSize: 14,
-    color: '#6b7280',
-    marginTop: 4,
+    fontSize: typography.fontSize.sm,
+    color: colors.textMuted,
+    marginTop: spacing.xs,
   },
   detailsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    gap: 12,
+    paddingHorizontal: spacing.xl,
+    gap: spacing.md,
   },
   detailCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 16,
-    padding: 16,
+    backgroundColor: colors.cardBackground,
+    borderRadius: spacing.borderRadius.lg,
+    padding: spacing.lg,
     width: '48%',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...shadows.card,
   },
   detailIcon: {
-    fontSize: 28,
-    marginBottom: 8,
+    fontSize: spacing.iconSize.lg,
+    marginBottom: spacing.sm,
   },
   detailLabel: {
-    fontSize: 12,
-    color: '#6b7280',
-    marginBottom: 4,
+    fontSize: typography.fontSize.xs,
+    color: colors.textMuted,
+    marginBottom: spacing.xs,
   },
   detailValue: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1f2937',
+    fontSize: typography.fontSize.lg,
+    fontWeight: typography.fontWeight.semibold,
+    color: colors.textPrimary,
   },
   forecastSection: {
-    marginTop: 30,
-    paddingBottom: 20,
+    marginTop: spacing['3xl'],
   },
   forecastTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#1f2937',
-    paddingHorizontal: 20,
-    marginBottom: 16,
+    fontSize: typography.fontSize.xl,
+    fontWeight: typography.fontWeight.semibold,
+    color: colors.textPrimary,
+    paddingHorizontal: spacing.xl,
+    marginBottom: spacing.lg,
   },
   forecastContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: spacing.xl,
+    paddingBottom: spacing.sm,
   },
   forecastLoading: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 20,
+    paddingVertical: spacing.xl,
   },
   forecastLoadingText: {
-    marginLeft: 10,
-    fontSize: 14,
-    color: '#6b7280',
+    marginLeft: spacing.sm,
+    fontSize: typography.fontSize.sm,
+    color: colors.textMuted,
   },
 });
 
