@@ -1,164 +1,183 @@
-# Weather Forecast App
+# Weather App Mobile (React Native)
 
-A modern, dynamic, and visually appealing weather forecasting application built with React and the OpenWeatherMap API. This app provides real-time weather data, 5-day forecasts, and a beautiful user interface with smooth animations and responsive design.
-
+A mobile weather application built with React Native, Expo Router, and TypeScript. This is the mobile version of the Weather Forecast web application.
 
 ## Features
 
-- **Real-time Weather Data**: Get current weather information for any city worldwide
-- **5-Day Forecast**: View detailed weather predictions for the next 5 days
-- **Temperature Unit Toggle**: Easily switch between Celsius and Fahrenheit
-- **Comprehensive Weather Details**:
-  - Temperature (current, feels like, min, max)
-  - Humidity
-  - Wind speed
-  - Atmospheric pressure
-  - Visibility
-  - Sunrise & sunset times
-- **Modern Design**:
-  - Smooth animations and transitions
-  - Responsive layout for all screen sizes
-- **Error Handling**: User-friendly error messages for various scenarios
-- **Loading States**: Visual feedback during API requests
-- **Local Storage**: Remembers your temperature unit preference
+- Real-time weather data for any city
+- 5-day weather forecast
+- Automatic location detection
+- Temperature unit toggle (Celsius/Fahrenheit)
+- Clean and modern UI design
+- Persistent user preferences
+- File-based routing with Expo Router
+- Professional architecture with separated concerns
 
+## Tech Stack
 
+- **React Native** - Mobile app framework
+- **Expo** - Development platform
+- **Expo Router** - File-based routing
+- **TypeScript** - Type safety
+- **Context API** - Global state management
+- **Custom Hooks** - Reusable logic
+- **OpenWeatherMap API** - Weather data
 
+## Project Structure
 
-## Installation & Setup
-
-### 1. Clone the Repository
-
-```bash
-git clone <your-repository-url>
-cd weather-app
+```
+weather-app/
+├── app/
+│   ├── _layout.tsx            # Root layout with WeatherProvider
+│   └── index.tsx              # Home screen
+├── src/
+│   ├── components/
+│   │   ├── SearchBar.tsx      # City search input
+│   │   ├── WeatherDisplay.tsx # Main weather display
+│   │   ├── ForecastCard.tsx   # Forecast item card
+│   │   ├── LoadingSpinner.tsx # Loading indicator
+│   │   └── ErrorMessage.tsx   # Error display
+│   ├── context/
+│   │   ├── WeatherContext.tsx # Global weather state
+│   │   └── index.tsx          # Context exports
+│   ├── hooks/
+│   │   ├── useWeather.tsx     # Weather data hook
+│   │   ├── useLocation.tsx    # Location hook
+│   │   ├── useTemperatureUnit.tsx # Unit preference hook
+│   │   └── index.tsx          # Hooks exports
+│   ├── styles/
+│   │   ├── colors.tsx         # Color palette
+│   │   ├── typography.tsx     # Font sizes and weights
+│   │   ├── spacing.tsx        # Spacing and sizes
+│   │   ├── shadows.tsx        # Shadow styles
+│   │   └── index.tsx          # Styles exports
+│   ├── constants/
+│   │   ├── api.tsx            # API configuration
+│   │   ├── storage.tsx        # Storage keys
+│   │   └── index.tsx          # Constants exports
+│   ├── types/
+│   │   └── weather.tsx        # TypeScript interfaces
+│   └── utils/
+│       ├── weatherAPI.tsx     # API functions
+│       └── weatherReducer.tsx # State reducer
+├── assets/                    # App icons and images
+├── app.json                   # Expo configuration
+├── package.json               # Dependencies
+└── tsconfig.json              # TypeScript config
 ```
 
-### 2. Install Dependencies
+## Architecture
 
+### Context API
+The app uses React Context for global state management:
+- `WeatherContext` provides weather data, loading states, and actions to all components
+- `WeatherProvider` wraps the app in `_layout.tsx`
+
+### Custom Hooks
+Reusable logic is extracted into custom hooks:
+- `useWeather` - Fetches and manages weather data
+- `useLocation` - Handles device location
+- `useTemperatureUnit` - Manages temperature unit preference with persistence
+
+### Centralized Styles
+All styling constants are centralized:
+- `colors` - Color palette for consistent theming
+- `typography` - Font sizes and weights
+- `spacing` - Margins, paddings, and sizes
+- `shadows` - Shadow presets for cards
+
+### Constants
+Configuration values are separated:
+- `API_CONFIG` - API URLs and keys
+- `API_ERRORS` - Error messages
+- `STORAGE_KEYS` - AsyncStorage keys
+
+## Installation
+
+1. Make sure you have Node.js and npm installed
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npx expo start
+   ```
+
+4. Run on your device:
+   - Scan the QR code with Expo Go app (iOS/Android)
+   - Press `a` for Android emulator
+   - Press `i` for iOS simulator
+
+## API Key
+
+The app uses OpenWeatherMap API. For production use:
+
+1. Get your own API key from [OpenWeatherMap](https://openweathermap.org/api)
+2. Update the API key in `src/constants/api.tsx`
+
+## Building for Production
+
+### Android (APK/AAB)
 ```bash
-npm install
+eas build --platform android
 ```
 
-### 3. Configure Environment Variables
-
-1. Copy the `.env` file.
-
-2. Open the `.env` file and make sure about the API key presence.(should be shared in advance)
-
-### 4. Run the Development Server
-
+### iOS (IPA)
 ```bash
-npm run dev
+eas build --platform ios
 ```
 
-The application will start at `http://localhost:5173`.
+## React Patterns Used
 
+### Custom Hooks
+- `useWeather` - Weather data fetching and state management
+- `useLocation` - Device location with permission handling
+- `useTemperatureUnit` - Unit preference with AsyncStorage persistence
 
-
-
-
-## Usage Guide:
-
-### Searching for Weather
-
-1. Enter a city name in the search bar (e.g., "London", "New York", "Tokyo")
-2. Click the "Search" button or press Enter
-3. Wait for the app to fetch and display the weather data
-
-### Toggle Temperature Units
-
-- Click the temperature unit button (°C or °F) in the weather display header
-- Your preference will be saved automatically
-
-### Understanding the Weather Display
-
-- **Main Section**: Shows current temperature, weather icon, and description
-- **Details Cards**: Display humidity, wind speed, pressure, visibility, sunrise, and sunset
-- **Forecast Section**: Shows 5-day weather forecast with temperatures and conditions
-
-
-
-
-## React Hooks Used:
-
-This project demonstrates proficiency with essential React hooks:
-
-### useState
-- Managing temperature unit preference
-- Handling search input state
-- Component-level state management
-
-### useEffect
-- Loading saved preferences from localStorage
-- Persisting user preferences
-- Requesting geolocation on app mount
-- Side effects management
+### Context API
+- Global state management without prop drilling
+- Provider pattern for dependency injection
 
 ### useReducer
 - Complex weather state management
-- Handling multiple related state values
-- Managing loading, error, and success states
-- Action-based state updates
+- Predictable state transitions
 
-## API Integration
+### useEffect
+- Side effects for data fetching
+- Cleanup for subscriptions
 
-The app uses the OpenWeatherMap API with two main endpoints:
+### useCallback
+- Memoized callbacks for performance
+- Preventing unnecessary re-renders
 
-1. **Current Weather API**: `/weather`
-   - Fetches current weather data for a specified city
-   - Returns temperature, humidity, wind, pressure, etc.
+## Branches
 
-2. **5-Day Forecast API**: `/forecast`
-   - Retrieves weather predictions
-   - Filtered to show one forecast per day at noon
+- `main` - Web version (React + Vite + JavaScript)
+- `react-native-mobile` - Mobile version (React Native + Expo Router + TypeScript)
 
+### Switching Between Branches
 
+To switch to the web version:
+```bash
+git checkout main
+```
 
-### Error Handling
+To switch to the mobile version:
+```bash
+git checkout react-native-mobile
+```
 
-The app handles various API errors:
-- Invalid API key (401)
-- City not found (404)
-- Too many requests (429)
-- Server errors (500, 502, 503)
-- Network errors
-- Missing API key
-
-
-
-
-
-## Troubleshooting
-
-### API Key Issues
-
-**Problem**: "API key is missing" error
-**Solution**: Ensure your `.env` file exists and contains `VITE_OPENWEATHER_API_KEY=your_key`
-
-**Problem**: "Invalid API key" error
-**Solution**: Verify your API key is correct and ask the author: Mahyar Naeimi if its active on OpenWeatherMap
-
-### City Not Found
-
-**Problem**: "City not found" error
-**Solution**:
-- Check the spelling of the city name
-- Try adding the country code (e.g., "London,UK")
-- Use larger cities that are more likely to be in the database
-
-### Development Server Issues
-
-**Problem**: Port already in use
-**Solution**: Vite will automatically try the next available port, or you can specify a port in `vite.config.js`
-
+**Note:** Each branch has completely different files. The web version files are preserved in `main` branch and mobile version files are in `react-native-mobile` branch.
 
 ## Contact & Support
 
 For questions, issues, or suggestions:
 - Open an issue in the GitHub repository
-- Contact the developmer: Mahyar Naeimi
+- Contact the developer: Mahyar Naeimi
 
 ---
 
-**Built with React and OpenWeatherMap API**
+**Built with React Native, Expo Router, and OpenWeatherMap API**
