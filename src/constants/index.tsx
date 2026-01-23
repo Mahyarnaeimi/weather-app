@@ -1,3 +1,5 @@
+// src/constants/index.tsx
+
 export { API_CONFIG, API_ENDPOINTS, API_ERRORS, getWeatherIconUrl } from './api';
 export { STORAGE_KEYS } from './storage';
 export { weatherEmojis, getWeatherEmoji } from './weatherIcons';

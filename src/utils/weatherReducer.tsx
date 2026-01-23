@@ -1,3 +1,5 @@
+// src/utils/weatherReducer.tsx
+
 import { WeatherState, WeatherAction } from '../types/weather';
 
 // Action types

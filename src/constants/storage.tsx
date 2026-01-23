@@ -1,4 +1,5 @@
 // AsyncStorage keys
+
 export const STORAGE_KEYS = {
   TEMPERATURE_UNIT: '@weather_app_unit',
   LAST_CITY: '@weather_app_last_city',

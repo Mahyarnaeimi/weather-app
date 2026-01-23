@@ -1,3 +1,5 @@
+// src/utils/weatherAPI.tsx
+
 import { CurrentWeatherResponse, ForecastItem, ForecastResponse } from '../types/weather';
 import { API_CONFIG, API_ERRORS } from '../constants';
 
